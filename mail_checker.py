@@ -45,14 +45,14 @@ if st.button("Check Email Provider"):
                 break
             else:
                 results[domain] = f"Other / Filtering System ({exchange})"
-                try: 
-                   filtered_email = dns.resolver.resolve([domain], 'TXT')
-                   for i in filtered_email:
-                      txt_record = i.to_text()
-                      if "v=spf1" in txt_record:
-                         results[domain] += f"SPF Record: {txt_record}"
-                except Exception as e:
-                  results[domain] += f"SPF Check Error: {e}"
+                # try: 
+                #    filtered_email = dns.resolver.resolve([domain], 'TXT')
+                #    for i in filtered_email:
+                #       txt_record = i.to_text()
+                #       if "v=spf1" in txt_record:
+                #          results[domain] += f"SPF Record: {txt_record}"
+                # except Exception as e:
+                #   results[domain] += f"SPF Check Error: {e}"
         else:
           results[domain] = mx_records
       else:
