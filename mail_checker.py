@@ -34,17 +34,25 @@ if st.button("Check Email Provider"):
         if isinstance(mx_records, list):
           for pref, exchange in mx_records:
             mx_host = exchange.lower()
-            if mx_host.endswith("google.com") or mx_host.endswith("googlemail.com"):
-                results[domain] = "Google (Gmail)"
+            if "google.com" in mx_host or "googlemail.com" in mx_host:
+                results[domain] = "Google"
                 break
-            elif mx_host.endswith("outlook.com") or mx_host.endswith("hotmail.com") or mx_host.endswith("office365.com"):
-                results[domain] = "Microsoft (Outlook/Office 365)"
+            elif "outlook.com" in mx_host or "hotmail.com" in mx_host or "office365.com" in mx_host:
+                results[domain] = "Outlook"
                 break
-            elif mx_host.endswith("icloud.com") or mx_host.endswith("apple.com"):
-                results[domain] = "Apple (iCloud)"
+            elif "icloud.com" in mx_host or "apple.com" in mx_host:
+                results[domain] = "Apple"
                 break
             else:
                 results[domain] = f"Other / Filtering System ({exchange})"
+                try: 
+                   filtered_email = dns.resolver.resolve([domain], 'TXT')
+                   for i in filtered_email:
+                      txt_record = i.to_text()
+                      if "v=spf1" in txt_record:
+                         results[domain] += f"SPF Record: {txt_record}"
+                except Exception as e:
+                  results[domain] += f"SPF Check Error: {e}"
         else:
           results[domain] = mx_records
       else:
